@@ -12,7 +12,8 @@ enum Message {
     Stop,
     Skip,
     TimeCheck,
-    Quit
+    Quit,
+    Debug,
 }
 
 
@@ -125,6 +126,11 @@ fn main() {
 
     tray.inner_mut().add_separator().unwrap();
 
+    let debug_tx = tx.clone();
+    tray.add_menu_item("Debug", move || {
+        debug_tx.send(Message::Debug).unwrap();
+    }).unwrap();
+
     let quit_tx = tx.clone();
     tray.add_menu_item("Quit", move || {
         quit_tx.send(Message::Quit).unwrap();
@@ -139,6 +145,8 @@ fn main() {
     let mut currState: State;
     
     let mut numberOfBreaks: i32 = 1;
+
+    let mut windowVisible = false;
 
     let button_tx = tx.clone(); //the sender for the loop
     
@@ -215,6 +223,10 @@ fn main() {
                 updateLabel(&currState, &mut tray, &labelID, true);
             }
             
+            Ok(Message::Debug) => {
+                windowVisible = !windowVisible;
+                setWindowVisibility(windowVisible);
+            }
             _ => {}
         }
     }
@@ -233,4 +245,18 @@ fn updateLabel(currState: &State, tray: &mut TrayItem, labelID: &u32, sendMsg: b
     let _ = tray.inner_mut().set_menu_item_label(data.1, *labelID);
     let _ = tray.inner_mut().set_icon(data.0);
     println!("updated tray label: {:?}", currState);
+}
+
+fn setWindowVisibility(visible: bool){
+
+    let visibilityText = if visible {
+        "normal"
+    } else {
+        "hidden"
+    };
+
+    Command::new("cmd")
+        .args(["/C", (format!("powershell -WindowStyle {visibilityText}").as_str())])
+        .output()
+        .expect("failed to execute process");
 }
