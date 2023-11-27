@@ -87,22 +87,7 @@ impl State{
 
 fn main() {
 
-    // msgAll("Time to work");
-
-    // for i in 0..5{
-    //     println!("{:?} out of 25 minutes", i * 5);
-    //     sleep(Duration::from_secs(5 * 60));
-    // }
-
-    // msgAll("Break Time!");
-    // println!("Break Time!");
-
-    // sleep(Duration::from_secs(5 * 60));
-
-    // msgAll("break times up");
-    // println!("Break Times up");
-
-
+    // creating the tray
     
     let mut tray = TrayItem::new(
         "Tray Example",
@@ -146,12 +131,15 @@ fn main() {
 
     tray.inner_mut().add_separator().unwrap(); //here so its harder to misclick the quit button
 
-    
+
+
+    //variables for the loop
+
     let mut currState: State;
     
     let mut numberOfBreaks: i32 = 1;
 
-    let button_tx = tx.clone();
+    let button_tx = tx.clone(); //the sender for the loop
     
     currState = State::Hatled;
     updateLabel(&currState, &mut tray, &labelID, false);
@@ -165,6 +153,8 @@ fn main() {
             },
             State::Hatled => {},
         }
+
+
         match rx.recv() {
             Ok(Message::Quit) => {
                 println!("Quit");
@@ -199,8 +189,6 @@ fn main() {
                     numberOfBreaks += 1;
                 }
 
-                //TODO setIcon
-
                 currState = State::Timed(Instant::now(), nextState);
 
                 updateLabel(&currState, &mut tray, &labelID, true);
@@ -222,7 +210,6 @@ fn main() {
                 updateLabel(&currState, &mut tray, &labelID, true);
             }
             
-
             _ => {}
         }
     }
