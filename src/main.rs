@@ -63,6 +63,7 @@ impl State{
             State::Timed(s, _) => {s.clone()}
         };
         
+        println!("{:?}", startTime.elapsed());
         Some(startTime.elapsed())
     }
 
@@ -147,6 +148,7 @@ fn main() {
     loop {
         match &currState{
             State::Timed(startTime, technique) => {
+                // println!("{:?}", startTime.elapsed());
                 if startTime.elapsed() > technique.getLength() {
                     button_tx.send(Message::Skip).unwrap();
                 }
@@ -155,7 +157,7 @@ fn main() {
         }
 
 
-        match rx.recv() {
+        match rx.recv_timeout(Duration::from_secs(1)) {
             Ok(Message::Quit) => {
                 println!("Quit");
                 break;
