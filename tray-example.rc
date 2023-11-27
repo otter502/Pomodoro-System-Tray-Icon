@@ -1,0 +1,4 @@
+default ICON "icons/DefaultPomodoroTimer.ico"
+break ICON "icons/BreakPomodoroTimer.ico"
+longer-break ICON "icons/LongerBreakPomodoroTimer.ico"
+working ICON "icons/WorkingPomodoroTimer.ico"
