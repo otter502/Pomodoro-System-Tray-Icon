@@ -92,6 +92,9 @@ fn main() {
     println!("welcome to the system tray pomodoro timer");
     println!("this program was written in rust by Otter502");
     println!("here is the link to the github repository: https://github.com/otter502/Pomodoro-System-Tray-Icon");
+    println!("don't close this window, it will end the program");
+    println!("\n\n-----\n"); //spacer
+
 
     // creating the tray
     
@@ -254,7 +257,6 @@ fn updateLabel(currState: &State, tray: &mut TrayItem, labelID: &u32, sendMsg: b
 fn setWindowVisibility(visible: bool){
 
     let visibilityText = if visible {
-        println!("don't close this window, it will end the program");
         "normal"
     } else {
         "hidden"
