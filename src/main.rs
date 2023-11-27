@@ -59,8 +59,8 @@ enum State{
 impl State{
     pub fn getElapsed(&self) -> Option<Duration>{
         let startTime = match &self{
-            State::Hatled => {return None},
-            State::Timed(s, _) => {s.clone()}
+            Self::Hatled => {return None},
+            Self::Timed(s, _) => {s.clone()}
         };
         
         println!("{:?}", startTime.elapsed());
@@ -69,8 +69,8 @@ impl State{
 
     pub fn getTechnique(&self) -> Option<TimedState>{
         let technique = match &self{
-            State::Hatled => {return None},
-            State::Timed(_, t) => {t}
+            Self::Hatled => {return None},
+            Self::Timed(_, t) => {t}
         };
         
         Some(technique.clone())
@@ -81,7 +81,7 @@ impl State{
             Self::Timed(_, TimedState::Working) => (IconSource::Resource("working"), "working", "time to start working!"),
             Self::Timed(_, TimedState::Break) => (IconSource::Resource("break"), "Break Time!", "short break time!"),
             Self::Timed(_, TimedState::LongerBreak) => (IconSource::Resource("longer-break"), "Longer Break Time!", "longer break time! have fun!"),
-            State::Hatled => (IconSource::Resource("default"), "halted", "halted timer"),
+            Self::Hatled => (IconSource::Resource("default"), "halted", "halted timer"),
         }
     }
 }
@@ -174,7 +174,7 @@ fn main() {
 
                 let mut minutesLeft = ((&currState).getTechnique().unwrap().getLength().as_secs() - elapsed.as_secs()) / 60;
                 
-                minutesLeft = minutesLeft + 1; //5-1 instead of 4-0
+                minutesLeft += 1; //5-1 instead of 4-0
 
                 let output: String = format!("you have minutes {minutesLeft} left");
                 msgAll(&output.as_str());
