@@ -185,6 +185,7 @@ fn main() {
                 let nextState = match &currState{
                     State::Timed(_, t) => t.nextState(numberOfBreaks % 4 == 0),
                     State::Hatled => {
+                        msgAll("currently halted");
                         println!("please unhalt the timer");
                         continue;
                     },
