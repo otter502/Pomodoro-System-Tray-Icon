@@ -172,8 +172,10 @@ fn main() {
                     continue;
                 }
 
-                let minutesLeft = ((&currState).getTechnique().unwrap().getLength().as_secs() - elapsed.as_secs()) / 60;
+                let mut minutesLeft = ((&currState).getTechnique().unwrap().getLength().as_secs() - elapsed.as_secs()) / 60;
                 
+                minutesLeft = minutesLeft + 1; //5-1 instead of 4-0
+
                 let output: String = format!("you have minutes {minutesLeft} left");
                 msgAll(&output.as_str());
             }
