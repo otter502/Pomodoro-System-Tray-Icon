@@ -90,7 +90,7 @@ fn main() {
     // creating the tray
     
     let mut tray = TrayItem::new(
-        "Tray Example",
+        "Pomodoro Timer",
         IconSource::Resource("default"),
     ).unwrap();
 
