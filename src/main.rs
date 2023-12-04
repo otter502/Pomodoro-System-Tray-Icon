@@ -93,7 +93,9 @@ fn main() {
     println!("welcome to the system tray pomodoro timer");
     println!("this program was written in rust by Otter502");
     println!("here is the link to the github repository: https://github.com/otter502/Pomodoro-System-Tray-Icon");
-    println!("don't close this window, it will end the program");
+    println!("don't close this window, it will end the program, instead click the debug button again");
+    println!("if you click on the text above the buttons while on break you can switch between a long or short break");
+
     println!("\n\n-----\n\n"); //spacer
 
 
