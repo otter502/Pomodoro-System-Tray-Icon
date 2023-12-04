@@ -14,6 +14,7 @@ enum Message {
     TimeCheck,
     Quit,
     Debug,
+    ChangeBreakType,
 }
 
 
@@ -103,13 +104,18 @@ fn main() {
         IconSource::Resource("default"),
     ).unwrap();
 
+    
+    let (tx, rx) = mpsc::sync_channel::<Message>(1);
+    
+    
     tray.inner_mut().add_separator().unwrap(); 
 
-    let labelID = tray.inner_mut().add_label_with_id("pomodoro").unwrap();
+    let breakChange_tx = tx.clone();
+    let labelID = tray.inner_mut().add_menu_item_with_id("pomodoro", move || {
+        breakChange_tx.send(Message::ChangeBreakType).unwrap();
+    }).unwrap();
 
     tray.inner_mut().add_separator().unwrap();
-
-    let (tx, rx) = mpsc::sync_channel::<Message>(1);
 
     let start_tx = tx.clone();
     tray.add_menu_item("Start", move || {
@@ -209,6 +215,20 @@ fn main() {
                 }
 
                 currState = State::Timed(Instant::now(), nextState);
+
+                updateLabel(&currState, &mut tray, &labelID, true);
+            }
+            Ok(Message::ChangeBreakType) => {
+                let (oldStart, nextState) = match &currState{
+                    State::Timed(t, tech) => match tech {
+                        TimedState::Working => {continue;},
+                        TimedState::Break => (t, TimedState::LongerBreak),
+                        TimedState::LongerBreak => (t, TimedState::Break),
+                    },
+                    State::Hatled => {continue;},
+                };
+
+                currState = State::Timed(*oldStart, nextState);
 
                 updateLabel(&currState, &mut tray, &labelID, true);
             }
